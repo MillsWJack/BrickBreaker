@@ -3,6 +3,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "Brick.h"
+#include "Maths.h"
 
 #include <vector>
 
@@ -22,7 +23,8 @@ public:
 	void Render();
 
 private:
-	bool AreColliding(Ball& ball, Paddle& paddle);
+	void ScreenCollisions(Ball& ball);
+	void AreColliding(Ball& ball, Paddle& paddle);
 	bool AreColliding(Ball& ball, Brick* brick);
 	void HandleCollisions(Ball& ball, Brick* brick);	
 	void HandleCollisions(Ball& ball, Paddle& paddle);

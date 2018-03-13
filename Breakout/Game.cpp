@@ -41,10 +41,10 @@ void Game::Update()
 	m_window.Update();
 	m_ball.Tick();
 	m_paddle.Tick();
-	if (AreColliding(m_ball, m_paddle))
-	{
-		HandleCollisions(m_ball, m_paddle);
-	}
+	
+	ScreenCollisions(m_ball);
+	AreColliding(m_ball, m_paddle);
+
 	for (int i = 0; i < m_brickList.size(); i++)
 	{
 		if (AreColliding(m_ball, m_brickList[i]))
@@ -65,16 +65,8 @@ void Game::Render()
 	m_window.EndDraw();
 }
 
-bool Game::AreColliding(Ball& ball, Paddle& paddle)
+void Game::ScreenCollisions(Ball& ball)
 {
-	//If ball hits paddle
-	if ((ball.GetYPosition() + (ball.GetRadius() * 2)) >= paddle.GetYPos() &&
-		(ball.GetYPosition() + (ball.GetRadius() * 2)) <= (paddle.GetYPos() + paddle.GetHeight()) &&
-		(ball.GetXPosition() + (ball.GetRadius() * 2)) >= paddle.GetXPos() &&
-		(ball.GetXPosition() + (ball.GetRadius() * 2)) <= (paddle.GetXPos() + paddle.GetLength()))
-	{
-		return true;
-	}
 	if ((ball.GetXPosition() + (ball.GetRadius() * 2)) >= 800)
 	{
 		ball.SetMoveSpeedX(-1);
@@ -91,8 +83,18 @@ bool Game::AreColliding(Ball& ball, Paddle& paddle)
 	{
 		ball.SetMoveSpeedY(-1);
 	}
+}
 
-	return false;
+void Game::AreColliding(Ball& ball, Paddle& paddle)
+{
+	//If ball hits paddle
+	if ((ball.GetYPosition() + (ball.GetRadius() * 2)) >= paddle.GetYPos() &&
+		(ball.GetYPosition() + (ball.GetRadius() * 2)) <= (paddle.GetYPos() + paddle.GetHeight()) &&
+		(ball.GetXPosition() + (ball.GetRadius() * 2)) >= paddle.GetXPos() &&
+		(ball.GetXPosition() + (ball.GetRadius() * 2)) <= (paddle.GetXPos() + paddle.GetLength()))
+	{
+		HandleCollisions(ball, paddle);
+	}
 }
 
 bool Game::AreColliding(Ball& ball, Brick* brick)
@@ -110,78 +112,11 @@ bool Game::AreColliding(Ball& ball, Brick* brick)
 
 void Game::HandleCollisions(Ball& ball, Brick* brick)
 {
-	//Ball is coming from the left and hits left side of brick
-	if(ball.GetMoveSpeed().x > 0 &&
-		ball.GetPosition().x >= brick->GetPosition().x &&
-		ball.GetPosition().x <= brick->GetPosition().x + (brick->GetSize().x / 2))
-	{
-		ball.SetMoveSpeedX(-1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the left and hits the right side of the paddle
-	else if (ball.GetMoveSpeed().x > 0 &&
-		ball.GetPosition().x >= brick->GetPosition().x + (brick->GetSize().x / 2) &&
-		ball.GetPosition().x <= brick->GetPosition().x + brick->GetSize().x)
-	{
-		ball.SetMoveSpeedX(1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the right and hits the right side of the paddle
-	else if (ball.GetMoveSpeed().x < 0 &&
-		ball.GetPosition().x >= brick->GetPosition().x + (brick->GetSize().x / 2) &&
-		ball.GetPosition().x <= brick->GetPosition().x + brick->GetSize().x)
-	{
-		ball.SetMoveSpeedX(-1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the right and hits the left side of the paddle
-	else if (ball.GetMoveSpeed().x < 0 &&
-		ball.GetPosition().x >= brick->GetPosition().x &&
-		ball.GetPosition().x <= brick->GetPosition().x + (brick->GetSize().x / 2))
-	{
-		ball.SetMoveSpeedX(1);
-		ball.SetMoveSpeedY(-1);
-	}
+	ball.SetMoveSpeedY(-1);
 }
 
 void Game::HandleCollisions(Ball& ball, Paddle& paddle)
 {
-	//Ball is coming from the left and hits the left side of the paddle
-	if (ball.GetMoveSpeed().x > 0 &&
-		ball.GetPosition().x >= paddle.GetXPos() &&
-		ball.GetPosition().x <= paddle.GetXPos() + (paddle.GetLength() / 2))
-	{
-		ball.SetMoveSpeedX(-1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the left and hits the right side of the paddle
-	else if (ball.GetMoveSpeed().x > 0 &&
-		ball.GetPosition().x >= paddle.GetXPos() + (paddle.GetLength() / 2) &&
-		ball.GetPosition().x <= paddle.GetXPos() + paddle.GetLength())
-	{
-		ball.SetMoveSpeedX(1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the right and hits the right side of the paddle
-	else if (ball.GetMoveSpeed().x < 0 &&
-		ball.GetPosition().x >= paddle.GetXPos() + (paddle.GetLength() / 2) &&
-		ball.GetPosition().x <= paddle.GetXPos() + paddle.GetLength())
-	{
-		ball.SetMoveSpeedX(-1);
-		ball.SetMoveSpeedY(-1);
-	}
-
-	//Ball is coming from the right and hits the left side of the paddle
-	else if (ball.GetMoveSpeed().x < 0 &&
-		ball.GetPosition().x >= paddle.GetXPos() &&
-		ball.GetPosition().x <= paddle.GetXPos() + (paddle.GetLength() / 2))
-	{
-		ball.SetMoveSpeedX(1);
-		ball.SetMoveSpeedY(-1);
-	}
+	ball.SetMoveSpeedX(-1);
+	ball.SetMoveSpeedY(-1);
 }
