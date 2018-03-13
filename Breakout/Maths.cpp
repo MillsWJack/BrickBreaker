@@ -20,8 +20,11 @@ float Maths::DegreesToRadians(float degrees)
 	return (m_PI / 180) * degrees;
 }
 
-//Converts radians to degrees
-float Maths::RadiansToDegrees(float radians)
+//Gets random number between two limits
+float Maths::Rand(float num1, float num2)
 {
-	return (180 / m_PI) * radians;
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = num2 - num1;
+	float r = random * diff;
+	return num1 + r;
 }

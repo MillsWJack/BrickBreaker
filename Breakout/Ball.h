@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include "Maths.h"
 
 class Ball
 {
@@ -13,7 +14,7 @@ public:
 	void Reset();
 
 	void MultiplyMoveSpeedX(float setter) { m_moveSpeed.x *= setter; }
-	void MultipleMoveSpeedY(float setter) { m_moveSpeed.y *= setter; }
+	void MultiplyMoveSpeedY(float setter) { m_moveSpeed.y *= setter; }
 	void SetMoveSpeedX(float setter) { m_moveSpeed.x = setter; }
 
 	sf::Vector2f GetMoveSpeed() { return m_moveSpeed; }

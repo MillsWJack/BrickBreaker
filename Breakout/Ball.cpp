@@ -33,4 +33,6 @@ void Ball::Reset()
 {
 	m_position.x = 400;
 	m_position.y = 300;
+	m_moveSpeed.x = Maths::Rand(-0.1, 0.1);
+	m_moveSpeed.y = 0.08;
 }

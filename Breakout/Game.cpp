@@ -81,7 +81,7 @@ void Game::ScreenCollisions(Ball& ball)
 	}
 	if (ball.GetYPosition() <= 0)
 	{
-		ball.MultipleMoveSpeedY(-1);
+		ball.MultiplyMoveSpeedY(-1);
 	}
 }
 
@@ -114,7 +114,7 @@ bool Game::AreColliding(Ball& ball, Brick* brick)
 void Game::HandleCollisions(Ball& ball, Brick* brick)
 {
 	//Reverse Y pos
-	ball.MultipleMoveSpeedY(-1);
+	ball.MultiplyMoveSpeedY(-1);
 }
 
 void Game::HandleCollisions(Ball& ball, Paddle& paddle)
@@ -122,5 +122,5 @@ void Game::HandleCollisions(Ball& ball, Paddle& paddle)
 	float mappedDegrees = Maths::Map(ball.GetPosition().x, paddle.GetPosition().x, paddle.GetPosition().x + paddle.GetSize().x, -10, 10);
 	float mappedRad = Maths::DegreesToRadians(mappedDegrees);
 	ball.SetMoveSpeedX(mappedRad);
-	ball.MultipleMoveSpeedY(-1);
+	ball.MultiplyMoveSpeedY(-1);
 }
