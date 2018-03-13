@@ -12,9 +12,10 @@ public:
 	void Render(sf::RenderWindow& window);
 	void Reset();
 
-	void SetMoveSpeedX(float setter) { m_moveSpeed.x *= setter; }
-	void SetMoveSpeedY(float setter) { m_moveSpeed.y *= setter; }
-	
+	void MultiplyMoveSpeedX(float setter) { m_moveSpeed.x *= setter; }
+	void MultipleMoveSpeedY(float setter) { m_moveSpeed.y *= setter; }
+	void SetMoveSpeedX(float setter) { m_moveSpeed.x = setter; }
+
 	sf::Vector2f GetMoveSpeed() { return m_moveSpeed; }
 	sf::Vector2f GetPosition() { return m_position; }
 	sf::CircleShape& GetBall() { return m_ballCircle; }

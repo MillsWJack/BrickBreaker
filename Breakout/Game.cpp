@@ -3,7 +3,7 @@
 Game::Game() :
 	m_window("Brick Breaker", sf::Vector2u(800, 600)),
 	m_ball(400, 300, 5, sf::Vector2f(-0.04, 0.08)),
-	m_paddle(400, 550, sf::Vector2f(100, 10))
+	m_paddle(sf::Vector2f(400, 550), sf::Vector2f(100, 10))
 {
 	for (int row = 0; row < 10; row++)
 	{
@@ -69,11 +69,11 @@ void Game::ScreenCollisions(Ball& ball)
 {
 	if ((ball.GetXPosition() + (ball.GetRadius() * 2)) >= 800)
 	{
-		ball.SetMoveSpeedX(-1);
+		ball.MultiplyMoveSpeedX(-1);
 	}
 	if (ball.GetXPosition() <= 0)
 	{
-		ball.SetMoveSpeedX(-1);
+		ball.MultiplyMoveSpeedX(-1);
 	}
 	if (ball.GetYPosition() + (ball.GetRadius() * 2) >= 600)
 	{
@@ -81,17 +81,17 @@ void Game::ScreenCollisions(Ball& ball)
 	}
 	if (ball.GetYPosition() <= 0)
 	{
-		ball.SetMoveSpeedY(-1);
+		ball.MultipleMoveSpeedY(-1);
 	}
 }
 
 void Game::AreColliding(Ball& ball, Paddle& paddle)
 {
 	//If ball hits paddle
-	if ((ball.GetYPosition() + (ball.GetRadius() * 2)) >= paddle.GetYPos() &&
-		(ball.GetYPosition() + (ball.GetRadius() * 2)) <= (paddle.GetYPos() + paddle.GetHeight()) &&
-		(ball.GetXPosition() + (ball.GetRadius() * 2)) >= paddle.GetXPos() &&
-		(ball.GetXPosition() + (ball.GetRadius() * 2)) <= (paddle.GetXPos() + paddle.GetLength()))
+	if ((ball.GetYPosition() + (ball.GetRadius() * 2)) >= paddle.GetPosition().y &&
+		(ball.GetYPosition() + (ball.GetRadius() * 2)) <= (paddle.GetPosition().y + paddle.GetSize().y) &&
+		(ball.GetXPosition() + (ball.GetRadius() * 2)) >= paddle.GetPosition().x &&
+		(ball.GetXPosition() + (ball.GetRadius() * 2)) <= (paddle.GetPosition().x + paddle.GetSize().x))
 	{
 		HandleCollisions(ball, paddle);
 	}
@@ -99,6 +99,7 @@ void Game::AreColliding(Ball& ball, Paddle& paddle)
 
 bool Game::AreColliding(Ball& ball, Brick* brick)
 {
+	//If ball hits a brick
 	if (ball.GetPosition().y >= brick->GetPosition().y &&
 		ball.GetPosition().y <= brick->GetPosition().y + brick->GetSize().y &&
 		ball.GetPosition().x >= brick->GetPosition().x &&
@@ -112,11 +113,14 @@ bool Game::AreColliding(Ball& ball, Brick* brick)
 
 void Game::HandleCollisions(Ball& ball, Brick* brick)
 {
-	ball.SetMoveSpeedY(-1);
+	//Reverse Y pos
+	ball.MultipleMoveSpeedY(-1);
 }
 
 void Game::HandleCollisions(Ball& ball, Paddle& paddle)
 {
-	ball.SetMoveSpeedX(-1);
-	ball.SetMoveSpeedY(-1);
+	float mappedDegrees = Maths::Map(ball.GetPosition().x, paddle.GetPosition().x, paddle.GetPosition().x + paddle.GetSize().x, -10, 10);
+	float mappedRad = Maths::DegreesToRadians(mappedDegrees);
+	ball.SetMoveSpeedX(mappedRad);
+	ball.MultipleMoveSpeedY(-1);
 }
