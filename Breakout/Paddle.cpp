@@ -20,11 +20,11 @@ void Paddle::Move(Direction direction)
 {
 	if (direction == Left)
 	{
-		m_position.x -= 0.15;
+		m_position.x -= 10;
 	}
 	else if (direction == Right)
 	{
-		m_position.x += 0.15;
+		m_position.x += 10;
 	}
 }
 

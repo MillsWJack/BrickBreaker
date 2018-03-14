@@ -2,7 +2,7 @@
 
 Game::Game() :
 	m_window("Brick Breaker", sf::Vector2u(800, 600)),
-	m_ball(400, 300, 5, sf::Vector2f(-0.04, 0.08)),
+	m_ball(400, 300, 5, sf::Vector2f(-4.0, 8.0)),
 	m_paddle(sf::Vector2f(400, 550), sf::Vector2f(100, 10))
 {
 	for (int row = 0; row < 10; row++)
@@ -21,7 +21,7 @@ Game::~Game()
 
 void Game::RestartClock()
 {
-	m_elapsed += m_clock.restart().asSeconds();
+	m_elapsed += m_clock.restart();
 }
 
 void Game::HandleInput()
@@ -45,12 +45,17 @@ void Game::Update()
 	ScreenCollisions(m_ball);
 	AreColliding(m_ball, m_paddle);
 
+	//Iterate through all bricks in vector to check whether it's
+	// colliding with ball
 	for (int i = 0; i < m_brickList.size(); i++)
 	{
 		if (AreColliding(m_ball, m_brickList[i]))
 		{
+			//If it is, calculate new X and Y direction
 			HandleCollisions(m_ball, m_brickList[i]);
+			//Toggle the brick to be hit
 			m_brickList[i]->ToggleHit();
+			//Erase brick from array
 			m_brickList.erase(m_brickList.begin() + i);
 		}
 	}
@@ -67,18 +72,26 @@ void Game::Render()
 
 void Game::ScreenCollisions(Ball& ball)
 {
+	//If ball hits Right side
 	if ((ball.GetXPosition() + (ball.GetRadius() * 2)) >= 800)
 	{
 		ball.MultiplyMoveSpeedX(-1);
 	}
+	//If ball hits left side
 	if (ball.GetXPosition() <= 0)
 	{
 		ball.MultiplyMoveSpeedX(-1);
 	}
+	//If ball hits bottom
 	if (ball.GetYPosition() + (ball.GetRadius() * 2) >= 600)
-	{
-		ball.Reset();
+	{	
+		//Once user presses Up key, another ball will spawn
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			m_ball.Reset();
+		}
 	}
+	//If ball hits top
 	if (ball.GetYPosition() <= 0)
 	{
 		ball.MultiplyMoveSpeedY(-1);
@@ -119,8 +132,17 @@ void Game::HandleCollisions(Ball& ball, Brick* brick)
 
 void Game::HandleCollisions(Ball& ball, Paddle& paddle)
 {
-	float mappedDegrees = Maths::Map(ball.GetPosition().x, paddle.GetPosition().x, paddle.GetPosition().x + paddle.GetSize().x, -10, 10);
+	//Map ball x position (where the minimum x is paddleX, 
+	// and the maxiumum x is paddleX + paddle length)
+	//to the scale of -360 and +360
+	float mappedDegrees = Maths::Map(ball.GetPosition().x, paddle.GetPosition().x, paddle.GetPosition().x + paddle.GetSize().x, -360, 360);
+	
+	//Convert this mapped value to radians
 	float mappedRad = Maths::DegreesToRadians(mappedDegrees);
+	
+	//Set ball X speed to that radian
 	ball.SetMoveSpeedX(mappedRad);
+
+	//Always going to reverse the Y direction
 	ball.MultiplyMoveSpeedY(-1);
 }

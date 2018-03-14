@@ -30,7 +30,7 @@ private:
 	void HandleCollisions(Ball& ball, Paddle& paddle);
 
 	sf::Clock m_clock;
-	float m_elapsed;
+	sf::Time m_elapsed;
 
 	std::vector<Brick*> m_brickList;
 

@@ -14,6 +14,7 @@ window::~window()
 void window::Create()
 {
 	m_window.create({ m_windowSize.x, m_windowSize.y, 32 }, m_windowTitle);
+	m_window.setFramerateLimit(60);
 }
 
 void window::Destroy()
