@@ -5,9 +5,15 @@ Game::Game() :
 	m_ball(400, 300, 5, sf::Vector2f(-4.0, 8.0)),
 	m_paddle(sf::Vector2f(400, 550), sf::Vector2f(100, 10))
 {
-	for (int row = 0; row < 10; row++)
+	int rowNum = 10;
+	int colNum = 8;
+	m_brickAmount = rowNum * colNum;
+
+	m_scoreTextBox.Setup(80, 100, 350, sf::Vector2f(325, 300));
+	m_instructTextBox.Setup(255, 20, 350, sf::Vector2f(280, 500));
+	for (int row = 0; row < rowNum; row++)
 	{
-		for (int col = 0; col < 8; col++)
+		for (int col = 0; col < colNum; col++)
 		{
 			Brick* brick = new Brick(sf::Vector2f(col * 100, row * 25), sf::Vector2f(100, 25));
 			m_brickList.push_back(brick);
@@ -45,6 +51,8 @@ void Game::Update()
 	ScreenCollisions(m_ball);
 	AreColliding(m_ball, m_paddle);
 
+	m_scoreTextBox.Add(std::to_string(m_brickAmount));
+
 	//Iterate through all bricks in vector to check whether it's
 	// colliding with ball
 	for (int i = 0; i < m_brickList.size(); i++)
@@ -57,6 +65,7 @@ void Game::Update()
 			m_brickList[i]->ToggleHit();
 			//Erase brick from array
 			m_brickList.erase(m_brickList.begin() + i);
+			m_brickAmount--;
 		}
 	}
 }
@@ -64,6 +73,8 @@ void Game::Update()
 void Game::Render()
 {
 	m_window.BeginDraw();
+	m_scoreTextBox.Render(*m_window.GetRenderWindow());
+	m_instructTextBox.Render(*m_window.GetRenderWindow());
 	m_paddle.Render(*m_window.GetRenderWindow());
 	m_ball.Render(*m_window.GetRenderWindow());
 	m_brick.Render(*m_window.GetRenderWindow(), m_brickList);
@@ -85,9 +96,11 @@ void Game::ScreenCollisions(Ball& ball)
 	//If ball hits bottom
 	if (ball.GetYPosition() + (ball.GetRadius() * 2) >= 600)
 	{	
+		m_instructTextBox.Add("Press Up To Spawn");
 		//Once user presses Up key, another ball will spawn
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
+			m_instructTextBox.Clear();
 			m_ball.Reset();
 		}
 	}

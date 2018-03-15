@@ -4,6 +4,7 @@
 #include "Paddle.h"
 #include "Brick.h"
 #include "Maths.h"
+#include "Textbox.h"
 
 #include <vector>
 
@@ -33,10 +34,13 @@ private:
 	sf::Time m_elapsed;
 
 	std::vector<Brick*> m_brickList;
+	int m_brickAmount;
 
 	window m_window;
 	Ball m_ball;
 	Paddle m_paddle;
 	Brick m_brick;
+	Textbox m_scoreTextBox;
+	Textbox m_instructTextBox;
 };
 
